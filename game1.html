@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>点击计分游戏（倒计时模式）</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .score, .timer {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .win-message, .lose-message {
+            font-size: 28px;
+            margin-top: 20px;
+            display: none;
+        }
+        .win-message {
+            color: #FF5722;
+        }
+        .lose-message {
+            color: #D32F2F;
+        }
+    </style>
+</head>
+<body>
+    <h1>点击计分游戏（倒计时模式）</h1>
+    <button id="click-button" onclick="increaseScore()">点击我</button>
+    <div class="score">当前分数：<span id="score">0</span></div>
+    <div class="timer">剩余时间：<span id="time">10</span> 秒</div>
+    <div id="win-message" class="win-message">🎉 恭喜你赢了！ 🎉</div>
+    <div id="lose-message" class="lose-message">😢 时间到了，你输了！ 😢</div>
+
+    <script>
+        let score = 0; // 当前分数
+        const winScore = 10; // 目标分数
+        let timeLeft = 10; // 倒计时时间（秒）
+        let timer; // 定时器引用
+
+        // 增加分数的函数
+        function increaseScore() {
+            if (timeLeft > 0) { // 倒计时未结束才能加分
+                score++;
+                document.getElementById('score').innerText = score;
+
+                // 如果达到目标分数，显示胜利信息并停止倒计时
+                if (score >= winScore) {
+                    endGame(true);
+                }
+            }
+        }
+
+        // 倒计时函数
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('time').innerText = timeLeft;
+
+                // 如果倒计时结束，停止游戏
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    if (score < winScore) {
+                        endGame(false); // 游戏失败
+                    }
+                }
+            }, 1000);
+        }
+
+        // 结束游戏的函数
+        function endGame(won) {
+            clearInterval(timer); // 停止倒计时
+            document.getElementById('click-button').disabled = true; // 禁用按钮
+            if (won) {
+                document.getElementById('win-message').style.display = 'block';
+            } else {
+                document.getElementById('lose-message').style.display = 'block';
+            }
+        }
+
+        // 启动倒计时
+        startTimer();
+    </script>
+</body>
+</html>
